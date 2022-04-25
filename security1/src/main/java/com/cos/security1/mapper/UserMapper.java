@@ -11,7 +11,7 @@ public interface UserMapper {
 	
 	int joinOauthMember(User user);
 	
-	// findBy ±ÔÄ¢ -> UsernameÀº ¹®¹ý
+	// findBy ï¿½ï¿½Ä¢ -> Usernameï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	// select * from user where username = ? (username)
 	// jpa query method
 	User findByUsername(String username);

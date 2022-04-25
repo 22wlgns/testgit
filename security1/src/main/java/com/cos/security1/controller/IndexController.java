@@ -1,26 +1,22 @@
 package com.cos.security1.controller;
 
+import com.cos.security1.config.auth.PrincipalDetails;
+import com.cos.security1.mapper.UserMapper;
+import com.cos.security1.model.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import com.cos.security1.config.auth.PrincipalDetails;
-import com.cos.security1.mapper.UserMapper;
-import com.cos.security1.model.User;
 
 @Controller
 public class IndexController {
@@ -33,24 +29,24 @@ public class IndexController {
 	
 	@GetMapping("/test/login")
 	public @ResponseBody String testLogin(Authentication authentication, 
-											@AuthenticationPrincipal PrincipalDetails userDetails) {  // DI (ÀÇÁ¸¼º ÁÖÀÇ) ¼¼¼Ç Á¤º¸¿¡ Á¢±Ù °¡´É
+											@AuthenticationPrincipal PrincipalDetails userDetails) {  // DI (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		System.out.println("/test/login___________________");
 		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 		System.out.println("authentication: "+principalDetails.getUserEntity());
 		System.out.println("username= "+userDetails.getUserEntity());
 		
-		return "¼¼¼Ç Á¤º¸ È®ÀÎ";
+		return "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½";
 	}
 	
 	@GetMapping("/test/oauth/login")
 	public @ResponseBody String testOAuthLogin(Authentication authentication, 
-												@AuthenticationPrincipal OAuth2User oauth) {  // DI (ÀÇÁ¸¼º ÁÖÀÇ) ¼¼¼Ç Á¤º¸¿¡ Á¢±Ù °¡´É
+												@AuthenticationPrincipal OAuth2User oauth) {  // DI (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		System.out.println("/test/oauth/login___________________");
 		OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
 		System.out.println("authentication: "+oauth2User.getAttributes());
 		System.out.println("OAuth2User: "+oauth.getAttributes());
 		
-		return "OAuth ¼¼¼Ç Á¤º¸ È®ÀÎ";
+		return "OAuth ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½";
 	}
 	
 	@GetMapping({"","/"})
@@ -59,7 +55,7 @@ public class IndexController {
 	}
 	
 	@GetMapping("/user")
-	public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+	public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
 		System.out.println("principalDetails: "+principalDetails.getUserEntity());
 		System.out.println("principalDetails: "+principalDetails.getName());
 		return "user";
@@ -102,16 +98,48 @@ public class IndexController {
 		return "joinForm";
 	}
 	
-	@Secured("ROLE_ADMIN") // ÇÑ °³¸¸ °É°í ½ÍÀ» °æ¿ì »ç¿ë, ±× ¿Ü¿¡´Â config¿¡¼­ ºí·ÏÀ¸·Î Ã³¸® 
+	@Secured("ROLE_ADMIN") // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½É°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½ï¿½ ï¿½Ü¿ï¿½ï¿½ï¿½ configï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ 
 	@GetMapping("/info")
 	public @ResponseBody String info() {
-		return "°³ÀÎÁ¤º¸";
+		return "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
 	}
 	
 	@PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 	@GetMapping("/data")
 	public @ResponseBody String data() {
-		return "µ¥ÀÌÅÍ Á¤º¸";
+		return "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½";
+	}
+
+	@PostMapping("/infoConfirm") // ë³µí˜¸í™” ë¹„ë°€ë²ˆí˜¸ ì¸ì¦
+	public String postMethodName(User user) {
+		
+		User user2 = userMapper.findByUsername(user.getUsername());
+		
+		if(bCryptPasswordEncoder.matches(user.getPw(), user2.getPw())) {
+
+			return "index";
+
+		} else {
+			return "redirect:/user";
+		}
+
+	}
+	
+	/** Comma Test */
+	@GetMapping("/comma")
+	public String commaTest() {
+		return "commaTest";
+	}
+	
+	/** Stringìœ¼ë¡œ ë°›ì•„ì˜¨ ì•¡ìˆ˜ë¥¼ intë¡œ ë°˜í™˜ */
+	@GetMapping("/commaData")
+	public @ResponseBody int commaData(String commaNumber) {
+		
+		String num_s = commaNumber.replaceAll(",", "");
+
+		int num = Integer.parseInt(num_s);
+
+		return num;
 	}
 	
 }
